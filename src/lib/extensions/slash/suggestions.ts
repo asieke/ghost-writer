@@ -27,8 +27,7 @@ export default {
 				title: 'AI Magic',
 				icon: Sparkles,
 				command: ({ editor, range }: { editor: Editor; range: Range }) => {
-					console.log('AI Magic!!!!');
-					editor.chain().focus().deleteRange(range).insertContent('?').run();
+					editor.chain().focus().deleteRange(range).insertContent('  ').run();
 				}
 			},
 			{

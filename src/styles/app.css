@@ -46,6 +46,10 @@ a {
 	@apply cursor-pointer text-indigo-600 underline hover:text-indigo-700;
 }
 
+hr {
+	@apply mb-4;
+}
+
 h1:first-of-type {
 	@apply my-0 -ml-16 -mr-16 -mt-8 pb-4 pl-16 pr-16 pt-16 text-4xl text-black;
 }

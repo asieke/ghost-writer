@@ -57,8 +57,6 @@ export default {
 					}
 				});
 
-				console.log(props.clientRect);
-
 				popup = tippy('body', {
 					getReferenceClientRect: props.clientRect,
 					appendTo: () => document.body,

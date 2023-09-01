@@ -10,6 +10,7 @@
 	import { content, fileStore } from '$lib/stores/file';
 	import { saveToast } from '$lib/stores/toast';
 
+	import { updateDecorations } from '$lib/extensions/hoverButtons/hoverButtons';
 	import { BubbleMenu } from '$components/menus';
 
 	let editorContainer: HTMLDivElement;
@@ -48,16 +49,19 @@
 				editor.set($editor);
 			},
 			onUpdate: () => {
-				// on update start a timer for 1.5s
-				// save if its been 1.5s since the last update
+				//clear the save timeout if it exists
 				if (saveTimeout) {
 					clearTimeout(saveTimeout);
 					saveTimeout = null;
 					saveToast.set('not saved');
 				}
+
+				//on update set a timer for 1.5s and save when complete
 				saveTimeout = setTimeout(async () => {
 					await fileStore.saveDocument();
 				}, 1500);
+
+				updateDecorations($editor);
 			}
 		});
 

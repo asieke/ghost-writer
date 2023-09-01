@@ -1,7 +1,6 @@
 <svelte:options accessors={true} />
 
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import type { Editor, Range } from '@tiptap/core';
 
 	export let editor: Editor;
@@ -10,10 +9,6 @@
 		title: string;
 		command: (params: { editor: Editor; range: Range }) => void;
 	}[];
-
-	onMount(() => {
-		console.log('we mounting');
-	});
 
 	let selectedIndex = 0;
 	let elements: HTMLButtonElement[] = [];
