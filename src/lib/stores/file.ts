@@ -4,7 +4,7 @@ import { writable, get } from 'svelte/store';
 import localforage from 'localforage';
 import { browser } from '$app/environment';
 import { editor as storeEditor } from './editor';
-import { addToast } from './toast';
+import { saveToast } from '$lib/stores/toast';
 
 const PLACEHOLDER = {
 	html: '<h1>My New Document</h1><p>Write something magical...</p>',
@@ -42,6 +42,7 @@ export const fileStore = {
 
 	//save the current document to local storage
 	saveDocument: async () => {
+		saveToast.set('saving...');
 		const editor = get(storeEditor);
 
 		if (browser && editor) {
@@ -60,9 +61,11 @@ export const fileStore = {
 			documents.set(updatedDocuments);
 			localforage.setItem('documents', JSON.stringify(updatedDocuments));
 			localforage.setItem(currentIdValue.toString(), html);
-
-			addToast(title + ' saved successfully', 'success');
 		}
+
+		setTimeout(() => {
+			saveToast.set('saved');
+		}, 1000);
 	},
 
 	deleteDocument: async () => {

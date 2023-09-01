@@ -8,12 +8,15 @@
 
 	import { editor } from '$lib/stores/editor';
 	import { content, fileStore } from '$lib/stores/file';
+	import { saveToast } from '$lib/stores/toast';
 
 	import { BubbleMenu } from '$components/menus';
 
 	let editorContainer: HTMLDivElement;
 	let bubbleMenuContainer: HTMLDivElement;
 	let bubbleMenuShowing = false;
+
+	let saveTimeout: ReturnType<typeof setTimeout> | null = null; // inactivity timer
 
 	onMount(async () => {
 		await fileStore.syncLocalStorage();
@@ -43,6 +46,18 @@
 			],
 			onTransaction: () => {
 				editor.set($editor);
+			},
+			onUpdate: () => {
+				//on update start a timer for 1.5s
+				//save if its been 1.5s since the last update
+				if (saveTimeout) {
+					clearTimeout(saveTimeout);
+					saveTimeout = null;
+					saveToast.set('not saved');
+				}
+				saveTimeout = setTimeout(async () => {
+					await fileStore.saveDocument();
+				}, 1500);
 			}
 		});
 

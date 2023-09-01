@@ -6,7 +6,8 @@ export default {
 			animation: {
 				fadeIn: 'fadeIn 500ms ease-in-out forwards',
 				fadeOut: 'fadeOut 500ms ease-in-out forwards',
-				spinning: 'spin 2s linear infinite'
+				spinning: 'spin 2s linear infinite',
+				'pulse-fast': 'pulse 1s ease-in-out infinite'
 			},
 			keyframes: {
 				fadeIn: { '0%': { opacity: 0 }, '100%': { opacity: 100 } },

@@ -24,3 +24,14 @@ export const getSelectedText = (editor: Editor) => {
 	}
 	return '';
 };
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+type DebouncedFunction<T extends any[], R> = (...args: T) => R;
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export const debounce = <T extends any[], R>(fn: DebouncedFunction<T, R>, ms = 300) => {
+	let timeoutId: ReturnType<typeof setTimeout>;
+	return function (this: any, ...args: T) {
+		clearTimeout(timeoutId);
+		timeoutId = setTimeout(() => fn.apply(this, args), ms);
+	};
+};
