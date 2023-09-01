@@ -5,6 +5,7 @@ import { CustomPlaceholder } from './customPlaceholder';
 import { Slash } from './slash/slash';
 
 import { Color } from '@tiptap/extension-color';
+import HardBreak from '@tiptap/extension-hard-break';
 import TextStyle from '@tiptap/extension-text-style';
 import Paragraph from '@tiptap/extension-paragraph';
 import Link from '@tiptap/extension-link';
@@ -46,6 +47,7 @@ lowlight.registerLanguage('css', css);
 lowlight.registerLanguage('ts', ts);
 
 export const extensions = [
+	HardBreak,
 	TextStyle,
 	Color,
 	Slash,

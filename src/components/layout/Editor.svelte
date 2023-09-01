@@ -31,7 +31,7 @@
 					element: bubbleMenuContainer,
 					tippyOptions: {
 						moveTransition: 'transform 0.3s ease-out',
-						maxWidth: 420,
+						maxWidth: 440,
 						onShow: (instance) => {
 							bubbleMenuShowing = true;
 						},

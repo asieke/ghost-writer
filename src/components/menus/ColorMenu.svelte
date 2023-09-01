@@ -63,7 +63,7 @@
 
 <button
 	bind:this={button}
-	class="items-middle flex h-full w-full flex-col justify-center whitespace-nowrap px-3 pt-[6px] text-center hover:bg-slate-100"
+	class="items-middle flex h-full w-full flex-col justify-center whitespace-nowrap px-2 pt-[6px] text-center hover:bg-slate-100"
 >
 	<svelte:component this={icon} class="mx-auto h-4 w-4 text-slate-600" />
 	<div class="mt-0.5 h-1 w-full" style="background-color: {activeColor === 'none' ? '' : activeColor}" />

@@ -4,7 +4,6 @@
 	import { AlignCenter, AlignJustify, AlignLeft, AlignRight } from 'lucide-svelte';
 	import type { Instance } from 'tippy.js';
 	import { SvelteComponent, onMount } from 'svelte';
-	import TextAlign from '@tiptap/extension-text-align';
 
 	type SvelteIconComponent = typeof AlignCenter & SvelteComponent;
 
@@ -68,7 +67,7 @@
 </button>
 
 <div bind:this={menu}>
-	<div class="flex flex-col justify-evenly rounded border border-stone-200 bg-white shadow-xl ring-1 ring-slate-300">
+	<div class="flex flex-row justify-evenly rounded border border-stone-200 bg-white shadow-xl ring-1 ring-slate-300">
 		{#each buttons as { icon, action }}
 			<button class="action" on:click={() => doAction(action, icon)}>
 				<svelte:component this={icon} class="h-4 w-4" />

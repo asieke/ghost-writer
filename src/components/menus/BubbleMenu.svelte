@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Editor } from '@tiptap/core';
-	import { TextMenu, ColorMenu, TextMarks, AlignMenu } from '$components/menus';
+	import { TextMenu, ColorMenu, TextMarks, AlignMenu, AIMenu } from '$components/menus';
 	import { Highlighter, PaintBucket, Type } from 'lucide-svelte';
 
 	export let editor: Editor;
@@ -22,8 +22,9 @@
 </script>
 
 <div
-	class="flex h-10 w-[420px] flex-row items-center justify-evenly divide-x divide-stone-200 rounded border border-stone-200 bg-white align-middle shadow-xl ring-1 ring-slate-300"
+	class="flex h-10 w-[430px] flex-row items-center justify-evenly divide-x divide-stone-200 rounded border border-stone-200 bg-white align-middle shadow-xl ring-1 ring-slate-300"
 >
+	<AIMenu {editor} />
 	<TextMenu {editor} />
 	<!-- Text Color Menu -->
 	<ColorMenu {editor} action={tAction} unset={tUnset} icon={Type} active={tActive} shade="dark" />
