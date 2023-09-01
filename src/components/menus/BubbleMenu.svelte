@@ -22,12 +22,12 @@
 </script>
 
 <div
-	class="flex h-10 w-[430px] flex-row items-center justify-evenly divide-x divide-stone-200 rounded border border-stone-200 bg-white align-middle shadow-xl ring-1 ring-slate-300"
+	class="flex h-10 flex-row items-center divide-x divide-stone-200 rounded border border-stone-200 bg-white align-middle shadow-xl ring-1 ring-slate-300"
 >
 	<AIMenu {editor} />
 	<TextMenu {editor} />
 	<!-- Text Color Menu -->
-	<ColorMenu {editor} action={tAction} unset={tUnset} icon={Type} active={tActive} shade="dark" />
+	<ColorMenu {editor} action={tAction} unset={tUnset} icon={Type} active={tActive} />
 	<!-- Fill Menu -->
 	<ColorMenu {editor} action={fAction} unset={fUnset} icon={PaintBucket} active={fActive} />
 	<!-- Highlight Menu -->

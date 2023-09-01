@@ -7,7 +7,7 @@ import { editor as storeEditor } from './editor';
 import { saveToast } from '$lib/stores/toast';
 
 const PLACEHOLDER = {
-	html: '<h1>My New Document</h1><p>Write something magical...</p>',
+	json: '{"type":"doc","content":[{"type":"heading","attrs":{"textAlign":"left","level":1},"content":[{"type":"text","text":"My New Document"}]},{"type":"paragraph","attrs":{"textAlign":"left"},"content":[{"type":"text","text":"Write something magical..."}]}]}',
 	title: 'My New Document'
 };
 
@@ -33,10 +33,11 @@ export const fileStore = {
 			JSON.parse((await localforage.getItem('documents')) || JSON.stringify([{ id: 0, title: PLACEHOLDER.title }]))
 		);
 		localforage.setItem('documents', JSON.stringify(get(documents)));
+
 		const localContent = (await localforage.getItem(get(currentId).toString())) as string;
-		content.set(localContent || PLACEHOLDER.html);
+		content.set(localContent || PLACEHOLDER.json);
 		if (!localContent) {
-			localforage.setItem(get(currentId).toString(), PLACEHOLDER.html);
+			localforage.setItem(get(currentId).toString(), PLACEHOLDER.json);
 		}
 	},
 
@@ -47,6 +48,7 @@ export const fileStore = {
 
 		if (browser && editor) {
 			const html = editor.getHTML();
+			const json = editor.getJSON();
 			//extract the title from the html
 			const match = html.match(/<[^>]+>([^<]+)<\/[^>]+>/);
 			const title = match ? match[1] : '';
@@ -60,7 +62,7 @@ export const fileStore = {
 
 			documents.set(updatedDocuments);
 			localforage.setItem('documents', JSON.stringify(updatedDocuments));
-			localforage.setItem(currentIdValue.toString(), html);
+			localforage.setItem(currentIdValue.toString(), JSON.stringify(json));
 		}
 
 		setTimeout(() => {
@@ -75,7 +77,7 @@ export const fileStore = {
 
 		if (documentsValue.length === 1) {
 			editor.commands.clearContent();
-			editor.commands.setContent(PLACEHOLDER.html);
+			editor.commands.setContent(JSON.parse(PLACEHOLDER.json));
 			await fileStore.saveDocument();
 		} else {
 			//find the array index of the current document
@@ -99,7 +101,7 @@ export const fileStore = {
 			documents.set(newDocuments);
 			currentId.set(newId);
 			editor.commands.clearContent();
-			editor.commands.setContent(content);
+			editor.commands.setContent(JSON.parse(content));
 		}
 	},
 
@@ -112,12 +114,12 @@ export const fileStore = {
 			currentId.set(get(nextId));
 			nextId.set(get(nextId) + 1);
 
-			await localforage.setItem(get(currentId).toString(), PLACEHOLDER.html);
+			await localforage.setItem(get(currentId).toString(), PLACEHOLDER.json);
 			const updatedDocuments = [...get(documents), { id: get(currentId), title: PLACEHOLDER.title }];
 			documents.set(updatedDocuments);
 
 			editor.commands.clearContent();
-			editor.commands.setContent(PLACEHOLDER.html);
+			editor.commands.setContent(JSON.parse(PLACEHOLDER.json));
 		}
 	},
 
@@ -129,7 +131,7 @@ export const fileStore = {
 			currentId.set(id);
 			content.set((await localforage.getItem(get(currentId).toString())) || '');
 			editor.commands.clearContent();
-			editor.commands.setContent(get(content));
+			editor.commands.setContent(JSON.parse(get(content)));
 		}
 	}
 };

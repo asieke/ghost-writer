@@ -9,7 +9,6 @@ import type { Editor } from '@tiptap/core';
  * @example
  * const editor = new Editor({configuration});
  * const text = getSelectedText(editor);
- * console.log(text);  // Logs the selected text or an empty string.
  */
 export const getSelectedText = (editor: Editor) => {
 	const str = JSON.stringify(editor.state.selection.content().toJSON());

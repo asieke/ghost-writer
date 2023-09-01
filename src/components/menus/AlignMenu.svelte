@@ -50,19 +50,14 @@
 	let activeIcon = (buttons.filter((button) => button.isActive()).pop()?.icon ?? AlignLeft) as SvelteIconComponent;
 
 	const doAction = (action: () => boolean, icon: SvelteIconComponent) => {
-		console.log('doing action', icon);
 		instance.hide();
 		if (action()) {
-			console.log('we aligned it', name);
 			activeIcon = icon;
 		}
 	};
 </script>
 
-<button
-	bind:this={button}
-	class="flex h-full flex-row items-center justify-center whitespace-nowrap px-2 align-middle text-sm hover:bg-slate-100"
->
+<button bind:this={button} class="bubbleButton">
 	<svelte:component this={activeIcon} class="h-4 w-4" />
 </button>
 

@@ -96,16 +96,12 @@
 	};
 
 	const doAction = (action: () => void) => {
-		console.log('doing action');
 		instance.hide();
 		action();
 	};
 </script>
 
-<button
-	bind:this={button}
-	class="flex h-full flex-row items-center justify-center whitespace-nowrap px-2 align-middle text-sm hover:bg-slate-100"
->
+<button bind:this={button} class="bubbleButton flex flex-row">
 	<div>{activeItem.name}</div>
 	<ChevronDown class="ml-1 h-4 w-4" />
 </button>

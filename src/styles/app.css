@@ -11,15 +11,15 @@
 }
 
 .tiptap > * .hoverButton {
-	@apply absolute h-8 w-16 -left-16 flex justify-end;
+	@apply absolute -left-16 flex h-8 w-16 justify-end;
 }
 
 .tiptap > *:hover .hoverButton > div {
-	@apply text-slate-300 opacity-100 bg-slate-100 p-1.5 rounded-md mr-2;
+	@apply mr-2 rounded-md bg-slate-100 p-1.5 text-slate-300 opacity-100;
 }
 
 .tiptap > *:hover .hoverButton > div:hover {
-	@apply text-slate-500 opacity-100 bg-slate-200 p-1.5 rounded-md mr-2;
+	@apply mr-2 rounded-md bg-slate-200 p-1.5 text-slate-500 opacity-100;
 }
 
 .hoverButton > div {
@@ -27,7 +27,11 @@
 }
 
 .hoverButton:focus {
-	@apply outline-0 ring-0 border-0;
+	@apply border-0 outline-0 ring-0;
+}
+
+button.bubbleButton {
+	@apply h-full items-center justify-center whitespace-nowrap px-2 align-middle text-sm text-slate-600 hover:bg-slate-100;
 }
 
 li[data-checked='true'] {
@@ -35,26 +39,26 @@ li[data-checked='true'] {
 }
 
 h1 {
-	@apply text-3xl my-5 font-extrabold tracking-tighter relative text-slate-950;
+	@apply relative my-5 text-3xl font-extrabold tracking-tighter text-slate-950;
 }
 
 a {
-	@apply text-indigo-600 cursor-pointer underline hover:text-indigo-700;
+	@apply cursor-pointer text-indigo-600 underline hover:text-indigo-700;
 }
 
 h1:first-of-type {
-	@apply text-4xl text-black -ml-16 -mr-16 my-0 -mt-8 pl-16 pr-16 pt-16 pb-4;
+	@apply my-0 -ml-16 -mr-16 -mt-8 pb-4 pl-16 pr-16 pt-16 text-4xl text-black;
 }
 
 h2 {
-	@apply text-xl mb-2 mt-6 font-bold text-slate-900;
+	@apply mb-2 mt-6 text-xl font-bold text-slate-900;
 }
 h3 {
-	@apply text-lg mb-1 mt-2 font-semibold text-slate-800;
+	@apply mb-1 mt-2 text-lg font-semibold text-slate-800;
 }
 
 p {
-	@apply leading-7 mb-3 text-slate-700;
+	@apply mb-3 leading-7 text-slate-700;
 }
 
 ul p,
@@ -63,15 +67,15 @@ ol p {
 }
 
 ul {
-	@apply pl-4 list-disc mb-1;
+	@apply mb-1 list-disc pl-4;
 }
 
 ol {
-	@apply pl-4 list-decimal mb-1;
+	@apply mb-1 list-decimal pl-4;
 }
 
 blockquote {
-	@apply bg-slate-100 p-2 border-l-2 border-black mb-4;
+	@apply mb-4 border-l-2 border-black bg-slate-100 p-2;
 }
 
 blockquote p {
@@ -79,11 +83,11 @@ blockquote p {
 }
 
 pre {
-	@apply p-4 my-3 bg-slate-800 text-slate-200 rounded-md;
+	@apply my-3 rounded-md bg-slate-800 p-4 text-slate-200;
 }
 
 code {
-	@apply text-sm p-1 bg-fuchsia-200 rounded-sm;
+	@apply rounded-sm bg-fuchsia-200 p-1 text-sm;
 }
 
 pre code {
@@ -91,20 +95,20 @@ pre code {
 }
 
 .tiptap {
-	@apply ring-0 border-0 outline-0 outline-offset-0 transition-all duration-200 ease-in-out;
+	@apply border-0 outline-0 outline-offset-0 ring-0 transition-all duration-200 ease-in-out;
 }
 
 table {
-	@apply w-full border-[1px] border-collapse my-4 table-fixed;
+	@apply my-4 w-full table-fixed border-collapse border-[1px];
 }
 
 td,
 th {
-	@apply px-2 py-1 border-[1px] border-slate-200 relative box-border;
+	@apply relative box-border border-[1px] border-slate-200 px-2 py-1;
 }
 
 th {
-	@apply font-semibold bg-slate-100;
+	@apply bg-slate-100 font-semibold;
 }
 
 table p {

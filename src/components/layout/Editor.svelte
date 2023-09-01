@@ -23,7 +23,7 @@
 
 		let newEditor = new Editor({
 			element: editorContainer,
-			content: $content,
+			content: JSON.parse($content),
 			extensions: [
 				//all extensions
 				...extensions,
@@ -34,7 +34,7 @@
 					element: bubbleMenuContainer,
 					tippyOptions: {
 						moveTransition: 'transform 0.3s ease-out',
-						maxWidth: 440,
+						maxWidth: 450,
 						onShow: (instance) => {
 							bubbleMenuShowing = true;
 						},
@@ -48,8 +48,8 @@
 				editor.set($editor);
 			},
 			onUpdate: () => {
-				//on update start a timer for 1.5s
-				//save if its been 1.5s since the last update
+				// on update start a timer for 1.5s
+				// save if its been 1.5s since the last update
 				if (saveTimeout) {
 					clearTimeout(saveTimeout);
 					saveTimeout = null;

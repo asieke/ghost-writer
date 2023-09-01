@@ -32,10 +32,7 @@
 </script>
 
 {#each buttons as { icon }}
-	<button
-		class="flex h-full w-full flex-row items-center justify-center whitespace-nowrap px-2 align-middle text-sm hover:bg-slate-100"
-		on:click={() => editor.chain().focus().toggleBold().run()}
-	>
+	<button class="bubbleButton" on:click={() => editor.chain().focus().toggleBold().run()}>
 		<svelte:component this={icon} class="h-4 w-4" />
 	</button>
 {/each}

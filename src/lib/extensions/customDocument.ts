@@ -7,7 +7,6 @@ export const CustomDocument = Document.extend({
 		return {
 			// ↓ your new keyboard shortcut
 			'Mod-k': () => {
-				window.event?.preventDefault();
 				console.log('link was pressed');
 				return setLink(this.editor);
 			}

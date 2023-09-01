@@ -8,7 +8,6 @@ export const CustomCodeBlock = CodeBlock.extend({
 				if (this.editor.state.selection.$from.node(1).type.name === 'codeBlock')
 					return this.editor.chain().focus().insertContent('  ').run();
 				else {
-					console.log('do really nothing');
 					return false;
 				}
 			}

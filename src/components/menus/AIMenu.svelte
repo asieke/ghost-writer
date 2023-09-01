@@ -53,7 +53,6 @@
 				console.error('Error getting AI response:', error);
 			} finally {
 				// Always re-enable the input, even if there was an error
-				console.log('we done');
 				inputElement.disabled = false;
 			}
 		}
@@ -88,10 +87,7 @@
 	};
 </script>
 
-<button
-	bind:this={button}
-	class="flex h-full flex-row items-center justify-center whitespace-nowrap px-2 align-middle text-sm hover:bg-slate-100"
->
+<button bind:this={button} class="bubbleButton">
 	<Sparkles class="h-4 w-4" />
 </button>
 
