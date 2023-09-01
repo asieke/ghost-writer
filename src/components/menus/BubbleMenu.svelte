@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Editor } from '@tiptap/core';
-	import { TextMenu, ColorMenu, TextMarks, AlignMenu, AIMenu } from '$components/menus';
+	import { TextMenu, ColorMenu, TextMarks, AlignMenu, AIMenu, LinkMenu } from '$components/menus';
 	import { Highlighter, PaintBucket, Type } from 'lucide-svelte';
 
 	export let editor: Editor;
@@ -26,6 +26,7 @@
 >
 	<AIMenu {editor} />
 	<TextMenu {editor} />
+	<LinkMenu {editor} />
 	<!-- Text Color Menu -->
 	<ColorMenu {editor} action={tAction} unset={tUnset} icon={Type} active={tActive} />
 	<!-- Fill Menu -->

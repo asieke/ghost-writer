@@ -4,5 +4,6 @@ import ColorMenu from './ColorMenu.svelte';
 import TextMarks from './TextMarks.svelte';
 import AlignMenu from './AlignMenu.svelte';
 import AIMenu from './AIMenu.svelte';
+import LinkMenu from './LinkMenu.svelte';
 
-export { BubbleMenu, TextMenu, ColorMenu, TextMarks, AlignMenu, AIMenu };
+export { BubbleMenu, TextMenu, ColorMenu, TextMarks, AlignMenu, AIMenu, LinkMenu };
