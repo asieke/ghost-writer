@@ -56,6 +56,7 @@ export const fileStore = {
 			//update the document store
 
 			const updatedDocuments = documentsValue.map((d) => (d.id === currentIdValue ? { id: d.id, title } : d));
+
 			documents.set(updatedDocuments);
 			localforage.setItem('documents', JSON.stringify(updatedDocuments));
 			localforage.setItem(currentIdValue.toString(), html);

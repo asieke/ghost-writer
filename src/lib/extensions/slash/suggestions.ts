@@ -1,3 +1,5 @@
+//suggestions.ts - line items for slash menu
+
 import Slash from './Slash.svelte';
 import tippy from 'tippy.js';
 import type { Instance as TippyInstance } from 'tippy.js';
@@ -91,11 +93,11 @@ export default {
 
 	render: () => {
 		let component: Slash, popup: TippyInstance;
-		let selected = false;
+		// let selected = false;
 
 		return {
 			onStart: (props: PropsType) => {
-				let element = document.createElement('div');
+				const element = document.createElement('div');
 				component = new Slash({
 					target: element,
 					props: {
@@ -137,7 +139,7 @@ export default {
 					return true;
 				}
 				if (props.event.key === 'Enter') {
-					selected = true;
+					// selected = true;
 					props.event.preventDefault();
 					return true;
 				}

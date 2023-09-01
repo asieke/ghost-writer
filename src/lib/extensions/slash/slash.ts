@@ -1,3 +1,4 @@
+//slash.ts - Slash tiptap custom extension
 import { Extension } from '@tiptap/core';
 import type { Editor, Range } from '@tiptap/core';
 import Suggestion from '@tiptap/suggestion';

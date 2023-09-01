@@ -1,8 +1,9 @@
+<!-- Slash.svelte - component to display slash menu -->
 <svelte:options accessors={true} />
 
 <script lang="ts">
 	import type { Editor, Range } from '@tiptap/core';
-	import type { Item } from './types';
+	import type { Item } from './slash';
 
 	export let editor: Editor;
 	export let range: Range;

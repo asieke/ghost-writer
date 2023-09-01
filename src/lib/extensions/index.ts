@@ -2,9 +2,10 @@ import { CustomDocument } from './customDocument';
 import { CustomCodeBlock } from './customCodeBlock';
 import { CustomTableCell } from './customTableCell';
 import { CustomPlaceholder } from './customPlaceholder';
-import { CustomFontMenu } from './customFontMenu/fontMenu';
 import { Slash } from './slash/slash';
 
+import { Color } from '@tiptap/extension-color';
+import TextStyle from '@tiptap/extension-text-style';
 import Paragraph from '@tiptap/extension-paragraph';
 import Link from '@tiptap/extension-link';
 import Text from '@tiptap/extension-text';
@@ -45,8 +46,9 @@ lowlight.registerLanguage('css', css);
 lowlight.registerLanguage('ts', ts);
 
 export const extensions = [
+	TextStyle,
+	Color,
 	Slash,
-	CustomFontMenu,
 	Underline,
 	TextAlign.configure({
 		types: ['heading', 'paragraph']
