@@ -3,6 +3,8 @@ import { CustomCodeBlock } from './customCodeBlock';
 import { CustomTableCell } from './customTableCell';
 import { CustomPlaceholder } from './customPlaceholder';
 import { Slash } from './slash/slash';
+import { Emoji } from './emoji/emoji';
+import InlineAI from './ai/inlineAI';
 
 import { Color } from '@tiptap/extension-color';
 import HardBreak from '@tiptap/extension-hard-break';
@@ -50,7 +52,9 @@ export const extensions = [
 	HardBreak,
 	TextStyle,
 	Color,
+	Emoji,
 	Slash,
+	InlineAI,
 	Underline,
 	TextAlign.configure({
 		types: ['heading', 'paragraph']

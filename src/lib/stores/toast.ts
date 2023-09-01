@@ -8,7 +8,7 @@ type Toast = {
 
 export const toasts = writable([] as Toast[]);
 
-export const saveToast = writable<'saved' | 'saving...' | 'not saved'>('not saved');
+export const saveToast = writable<'saved' | 'saving...' | 'not saved'>('saved');
 
 export const addToast = (message: string, status: 'warning' | 'success' | 'error' | 'info') => {
 	//set the ID to the length of the array + 1

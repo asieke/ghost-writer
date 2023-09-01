@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { Editor } from '@tiptap/core';
 	import { Bold, Italic, Strikethrough, Underline } from 'lucide-svelte';
+	import { onMount } from 'svelte';
 
-	export let editor: Editor;
 	const buttons = [
 		{
 			name: 'Bold',
@@ -20,7 +20,7 @@
 			name: 'Underline',
 			isActive: () => editor.isActive('underline'),
 			icon: Underline,
-			action: () => editor.chain().focus().toggleItalic().run()
+			action: () => editor.chain().focus().toggleUnderline().run()
 		},
 		{
 			name: 'Strikethrough',
@@ -29,10 +29,29 @@
 			action: () => editor.chain().focus().toggleStrike().run()
 		}
 	];
+
+	let active: Record<string, boolean> = {};
+
+	onMount(() => {
+		console.log('mounting marks!');
+		buttons.forEach((button) => {
+			active[button.name] = button.isActive();
+		});
+	});
+
+	const doAction = (fn: () => boolean, name: string) => {
+		if (fn()) {
+			let temp = { ...active };
+			temp[name] = !active[name];
+			active = temp;
+		}
+	};
+
+	export let editor: Editor;
 </script>
 
-{#each buttons as { icon }}
-	<button class="bubbleButton" on:click={() => editor.chain().focus().toggleBold().run()}>
-		<svelte:component this={icon} class="h-4 w-4" />
+{#each buttons as { icon, action, name }}
+	<button class="bubbleButton" on:click={() => doAction(action, name)}>
+		<svelte:component this={icon} class="h-4 w-4 {active[name] ? 'stroke-[3px]' : 'stroke-[2px]'}" />
 	</button>
 {/each}
