@@ -22,9 +22,10 @@
 		}
 	}
 	function handleKeydown(e: KeyboardEvent) {
+		console.log('handlign emoji key press');
 		if (e.key === 'ArrowUp') {
 			e.preventDefault();
-			selectedIndex = selectedIndex > 8 ? selectedIndex - 8 : selectedIndex;
+			selectedIndex = selectedIndex >= 8 ? selectedIndex - 8 : selectedIndex;
 			return true;
 		}
 

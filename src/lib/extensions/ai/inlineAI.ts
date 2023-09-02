@@ -12,6 +12,10 @@ export interface PropsType {
 	clientRect: () => DOMRect;
 }
 
+interface CommandProps {
+	command: ({ editor, range }: { editor: Editor; range: Range }) => void;
+}
+
 export default Extension.create({
 	name: 'inlineAI',
 
@@ -21,7 +25,7 @@ export default Extension.create({
 				char: '  ',
 				startOfLine: true,
 				pluginKey: new PluginKey('inlineAI'),
-				command: ({ editor, range, props }: { editor: Editor; range: Range; props: any }) => {
+				command: ({ editor, range, props }: { editor: Editor; range: Range; props: CommandProps }) => {
 					props.command({ editor, range });
 				}
 			}

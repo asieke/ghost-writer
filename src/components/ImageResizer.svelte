@@ -27,6 +27,7 @@
 					const selection = $editor.state.selection;
 					$editor.commands.setImage({
 						src: imageInfo.src,
+						// @ts-ignore
 						width: imageInfo.width as number,
 						height: imageInfo.height as number
 					});
@@ -47,5 +48,3 @@
 		}
 	});
 </script>
-
-<div class="absolute left-[500px] top-0 h-16 w-16 bg-red-500">Hello</div>

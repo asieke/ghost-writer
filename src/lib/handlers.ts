@@ -34,11 +34,15 @@ export const handlePaste = (view: EditorView, event: ClipboardEvent) => {
 							const transaction = view.state.tr.replaceSelectionWith(node); // places it in the correct position
 							view.dispatch(transaction);
 						} else {
+							console.log('pasting into doc');
+
+							// $editor.chain().focus().setImage({ src: res.data.filename }).run();
+
 							const imageNode = view.state.schema.nodes.image.create({ src: res.data.filename });
-							const cellNode = view.state.schema.nodes.tableCell.create(null, imageNode);
-							const rowNode = view.state.schema.nodes.tableRow.create(null, cellNode);
-							const tableNode = view.state.schema.nodes.table.create(null, rowNode);
-							const transaction = view.state.tr.replaceSelectionWith(tableNode);
+							// const cellNode = view.state.schema.nodes.tableCell.create(null, imageNode);
+							// const rowNode = view.state.schema.nodes.tableRow.create(null, cellNode);
+							// const tableNode = view.state.schema.nodes.table.create(null, rowNode);
+							const transaction = view.state.tr.replaceSelectionWith(imageNode);
 							view.dispatch(transaction);
 
 							console.log('time to wrap it');

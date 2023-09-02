@@ -4,6 +4,10 @@ import Suggestion from '@tiptap/suggestion';
 import { PluginKey } from '@tiptap/pm/state';
 import emojiSuggestions from './suggestions';
 
+interface CommandProps {
+	command: ({ editor, range }: { editor: Editor; range: Range }) => void;
+}
+
 const emojiExtension = Extension.create({
 	name: 'emoji',
 
@@ -12,7 +16,7 @@ const emojiExtension = Extension.create({
 			suggestion: {
 				char: ':',
 				pluginKey: new PluginKey('emoji'),
-				command: ({ editor, range, props }: { editor: Editor; range: Range; props: any }) => {
+				command: ({ editor, range, props }: { editor: Editor; range: Range; props: CommandProps }) => {
 					props.command({ editor, range });
 				}
 			}

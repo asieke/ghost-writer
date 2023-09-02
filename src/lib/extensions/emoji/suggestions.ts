@@ -43,7 +43,7 @@ export default {
 
 	render: () => {
 		let component: EmojiList, popup: TippyInstance;
-		let selected = false;
+		// let selected = false;
 
 		return {
 			onStart: async (props: PropsType) => {
@@ -89,7 +89,7 @@ export default {
 					return true;
 				}
 				if (props.event.key === 'Enter') {
-					selected = true;
+					// selected = true;
 					props.event.preventDefault();
 					return true;
 				}

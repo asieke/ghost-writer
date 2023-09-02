@@ -12,6 +12,10 @@ export type Item = {
 	command: (props: { editor: Editor; range: Range }) => void;
 };
 
+interface CommandProps {
+	command: ({ editor, range }: { editor: Editor; range: Range }) => void;
+}
+
 const slashExtension = Extension.create({
 	name: 'slash',
 
@@ -20,7 +24,7 @@ const slashExtension = Extension.create({
 			suggestion: {
 				char: '/',
 				pluginKey: new PluginKey('slash'),
-				command: ({ editor, range, props }: { editor: Editor; range: Range; props: any }) => {
+				command: ({ editor, range, props }: { editor: Editor; range: Range; props: CommandProps }) => {
 					props.command({ editor, range });
 				}
 			}

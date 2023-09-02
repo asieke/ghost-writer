@@ -65,7 +65,9 @@ export const extensions = [
 		nested: true
 	}),
 	Link,
-	CustomImage,
+	CustomImage.configure({
+		allowBase64: true
+	}),
 	Gapcursor,
 	Heading,
 	CustomDocument,

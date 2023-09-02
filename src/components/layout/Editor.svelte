@@ -59,8 +59,6 @@
 			},
 			onTransaction: () => {
 				editor.set($editor);
-
-				console.log($editor.isActive('image'));
 			},
 			onUpdate: () => {
 				//clear the save timeout if it exists
