@@ -9,9 +9,11 @@
 	import { editor } from '$lib/stores/editor';
 	import { content, fileStore } from '$lib/stores/file';
 	import { saveToast } from '$lib/stores/toast';
+	import { handlePaste } from '$lib/handlers';
 
 	import { updateDecorations } from '$lib/extensions/hoverButtons/hoverButtons';
 	import { BubbleMenu } from '$components/menus';
+	import ImageResizer from '$components/ImageResizer.svelte';
 
 	let editorContainer: HTMLDivElement;
 	let bubbleMenuContainer: HTMLDivElement;
@@ -33,6 +35,13 @@
 				BubbleMenuExtension.configure({
 					pluginKey: new PluginKey('TextMenu'),
 					element: bubbleMenuContainer,
+					shouldShow: ({ editor }) => {
+						// don't show if image is selected
+						if (editor.isActive('image')) {
+							return false;
+						}
+						return editor.view.state.selection.content().size > 0;
+					},
 					tippyOptions: {
 						moveTransition: 'transform 0.3s ease-out',
 						maxWidth: 450,
@@ -45,8 +54,13 @@
 					}
 				})
 			],
+			editorProps: {
+				handlePaste: handlePaste
+			},
 			onTransaction: () => {
 				editor.set($editor);
+
+				console.log($editor.isActive('image'));
 			},
 			onUpdate: () => {
 				//clear the save timeout if it exists
@@ -74,6 +88,10 @@
 		<BubbleMenu editor={$editor} />
 	{/if}
 </div>
-<div bind:this={editorContainer} />
+
+<div bind:this={editorContainer} style="width: 100%" />
+{#if $editor.isActive('image')}
+	<ImageResizer />
+{/if}
 
 <div class="h-64 w-full bg-white" />

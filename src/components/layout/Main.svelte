@@ -6,19 +6,18 @@
 <!-- Button to open sidebar -->
 
 <button
-	class="z-30 absolute left-0 top-0 pt-3 pl-3 p-2 transition-all duration-500 ease-in-out"
+	class="absolute left-0 top-0 z-30 p-2 pl-3 pt-3 transition-all duration-500 ease-in-out"
 	on:click={() => sidebarShowing.set(true)}
 >
-	<Menu class="w-6 h-6 text-slate-500" />
+	<Menu class="h-6 w-6 text-slate-500" />
 </button>
 
 <!-- Editor Container, expands if sidebar is not showing-->
 
 <div
 	id="editorContainer"
-	class="relative h-screen overflow-y-auto py-8 px-16 transition-all duration-500 ease-in-out {$sidebarShowing
-		? 'w-[calc(100vw-240px)] translate-x-0'
-		: 'w-[100vw] -translate-x-[240px]'}"
+	class="absolute left-[240px] top-0 h-screen overflow-y-auto px-16 py-8 transition-all duration-500 ease-in-out"
+	style={$sidebarShowing ? 'width: calc(100vw - 240px)' : 'width: 100vw; transform: translateX(-240px);'}
 >
 	<slot />
 </div>

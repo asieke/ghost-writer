@@ -14,10 +14,10 @@
 		action().then(() => {
 			container.scrollTop = container.scrollHeight;
 			button.classList.remove('animate-pulse', 'transition', 'duration-500', 'ease-in-out');
-			button.style.backgroundColor = 'var(--success)';
+			button.style.color = 'var(--success)';
 			setTimeout(() => {
 				button.classList.add('transition', 'duration-500', 'ease-in-out');
-				button.style.backgroundColor = currentBg;
+				button.style.color = currentBg;
 				button.disabled = false;
 			}, 1000);
 		});
@@ -38,7 +38,7 @@
 
 <div
 	bind:this={container}
-	class="relative z-40 h-screen w-[240px] flex-shrink-0 overflow-clip overflow-y-auto bg-slate-100 text-sm text-slate-700 transition-all duration-500 ease-in-out {$sidebarShowing
+	class="absolute left-0 top-0 z-40 h-screen w-[240px] flex-shrink-0 overflow-clip overflow-y-auto bg-slate-100 text-sm text-slate-700 transition-all duration-500 ease-in-out {$sidebarShowing
 		? '-translate-x-0'
 		: '-translate-x-[240px]'}"
 >
@@ -53,7 +53,6 @@
 		{/each}
 
 		<div class="mt-8 flex flex-row justify-evenly pb-12">
-			<button class="action" on:click={(e) => doAction(e, fileStore.saveDocument)}><Save class="h-5 w-5" /></button>
 			<button class="action" on:click={(e) => doAction(e, fileStore.deleteDocument)}><Trash2 class="h-5 w-5" /></button>
 			<button class="action" on:click={(e) => doAction(e, fileStore.newDocument)}><FilePlus class="h-5 w-5" /></button>
 			<button class="action" on:click={() => alert(JSON.stringify($editor.getJSON()))}>Copy</button>

@@ -27,7 +27,10 @@
 		console.log('mounting....');
 		tick().then(() => {
 			const width = editor.view.dom.getBoundingClientRect().width;
-			menu.style.width = `${width}px`;
+			//get the x position of the cursor in the editor
+			const { left } = editor.view.coordsAtPos(range.from);
+
+			menu.style.width = `${width - left + 60}px`;
 
 			if (input) input.focus();
 			if (editor.isActive('heading')) {

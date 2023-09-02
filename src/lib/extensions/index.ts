@@ -2,6 +2,7 @@ import { CustomDocument } from './customDocument';
 import { CustomCodeBlock } from './customCodeBlock';
 import { CustomTableCell } from './customTableCell';
 import { CustomPlaceholder } from './customPlaceholder';
+import { CustomImage } from './customImage';
 import { Slash } from './slash/slash';
 import { Emoji } from './emoji/emoji';
 import InlineAI from './ai/inlineAI';
@@ -26,7 +27,6 @@ import HorizontalRule from '@tiptap/extension-horizontal-rule';
 import Dropcursor from '@tiptap/extension-dropcursor';
 import Gapcursor from '@tiptap/extension-gapcursor';
 import History from '@tiptap/extension-history';
-import Image from '@tiptap/extension-image';
 
 import TaskList from '@tiptap/extension-task-list';
 import TaskItem from '@tiptap/extension-task-item';
@@ -65,7 +65,7 @@ export const extensions = [
 		nested: true
 	}),
 	Link,
-	Image,
+	CustomImage,
 	Gapcursor,
 	Heading,
 	CustomDocument,
@@ -74,7 +74,10 @@ export const extensions = [
 	Bold,
 	Code,
 	Italic,
-	Dropcursor,
+	Dropcursor.configure({
+		color: '#DBEAFE',
+		width: 4
+	}),
 	HorizontalRule,
 	History,
 	Blockquote,

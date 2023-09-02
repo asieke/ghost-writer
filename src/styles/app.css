@@ -46,6 +46,10 @@ a {
 	@apply cursor-pointer text-indigo-600 underline hover:text-indigo-700;
 }
 
+img {
+	@apply rounded shadow-sm outline-4 -outline-offset-4;
+}
+
 hr {
 	@apply mb-4;
 }
