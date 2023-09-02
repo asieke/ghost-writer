@@ -24,13 +24,20 @@ export const getSelectedText = (editor: Editor) => {
 	return '';
 };
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-type DebouncedFunction<T extends any[], R> = (...args: T) => R;
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export const debounce = <T extends any[], R>(fn: DebouncedFunction<T, R>, ms = 300) => {
-	let timeoutId: ReturnType<typeof setTimeout>;
-	return function (this: any, ...args: T) {
-		clearTimeout(timeoutId);
-		timeoutId = setTimeout(() => fn.apply(this, args), ms);
-	};
+/**
+ * Generates a random alphanumeric hash string of length 32.
+ *
+ * @returns {string} The generated random hash string.
+ * @example
+ * const hash = generateRandomHash();
+ * "k1sd8g2j3h1k4j2m5n6o8p9q0r1s4t3u"
+ */
+export const generateRandomHash = () => {
+	return Array(32)
+		.join()
+		.split(',')
+		.map(function () {
+			return (~~(Math.random() * 36)).toString(36);
+		})
+		.join('');
 };

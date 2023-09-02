@@ -26,7 +26,7 @@
 
 		let newEditor = new Editor({
 			element: editorContainer,
-			content: JSON.parse($content),
+			content: $content,
 			extensions: [
 				//all extensions
 				...extensions,

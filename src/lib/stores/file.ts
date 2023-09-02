@@ -1,54 +1,54 @@
 /* Store for saving files to local storage */
 
 import { writable, get } from 'svelte/store';
-import localforage from 'localforage';
+import { getItem, setItem, removeItem } from '$lib/clients/localForage';
 import { browser } from '$app/environment';
 import { editor as storeEditor } from './editor';
 import { saveToast } from '$lib/stores/toast';
+import { generateRandomHash } from '$lib/utils';
 
 const PLACEHOLDER = {
-	json: '{"type":"doc","content":[{"type":"heading","attrs":{"textAlign":"left","level":1},"content":[{"type":"text","text":"My New Document"}]},{"type":"paragraph","attrs":{"textAlign":"left"},"content":[{"type":"text","text":"Write something magical..."}]}]}',
+	html: '<h1>My New Document</h1><p>Lets write something magical</p>',
 	title: 'My New Document'
 };
 
+type Document = {
+	id: string;
+	title: string;
+};
+
 //the ID of the document that is currently being edited
-export const currentId = writable(0);
-//the next primary key for a new document
-export const nextId = writable(1);
+export const currentId = writable('');
 //the contents of the document that is currently being edited
 export const content = writable('');
 //metadata about all of the documents
-export const documents = writable<{ id: number; title: string }[]>([]);
+export const documents = writable<Document[]>([]);
 
 export const fileStore = {
 	//Initialize the stores variables by reading from local storage
 	syncLocalStorage: async () => {
-		currentId.set(((await localforage.getItem('currentId')) || 0) as number);
-		localforage.setItem('currentId', get(currentId));
+		const newId = generateRandomHash();
+		const newDocuments: Document[] = [{ id: newId, title: PLACEHOLDER.title }];
+		const newContent = PLACEHOLDER.html;
 
-		nextId.set(((await localforage.getItem('nextId')) || 1) as number);
-		localforage.setItem('nextId', get(nextId));
+		currentId.set((await getItem('currentId')) || newId);
+		setItem('currentId', get(currentId));
 
-		documents.set(
-			JSON.parse((await localforage.getItem('documents')) || JSON.stringify([{ id: 0, title: PLACEHOLDER.title }]))
-		);
-		localforage.setItem('documents', JSON.stringify(get(documents)));
+		content.set((await getItem(get(currentId))) || newContent);
+		setItem(get(currentId), get(content));
 
-		const localContent = (await localforage.getItem(get(currentId).toString())) as string;
-		content.set(localContent || PLACEHOLDER.json);
-		if (!localContent) {
-			localforage.setItem(get(currentId).toString(), PLACEHOLDER.json);
-		}
+		documents.set(((await getItem('documents')) as Document[]) || newDocuments);
+		setItem('documents', get(documents));
 	},
 
 	//save the current document to local storage
 	saveDocument: async () => {
+		console.log('saving document');
 		saveToast.set('saving...');
 		const editor = get(storeEditor);
 
 		if (browser && editor) {
 			const html = editor.getHTML();
-			const json = editor.getJSON();
 			//extract the title from the html
 			const match = html.match(/<[^>]+>([^<]+)<\/[^>]+>/);
 			const title = match ? match[1] : '';
@@ -59,10 +59,9 @@ export const fileStore = {
 			//update the document store
 
 			const updatedDocuments = documentsValue.map((d) => (d.id === currentIdValue ? { id: d.id, title } : d));
-
 			documents.set(updatedDocuments);
-			localforage.setItem('documents', JSON.stringify(updatedDocuments));
-			localforage.setItem(currentIdValue.toString(), JSON.stringify(json));
+			setItem('documents', updatedDocuments);
+			setItem(currentIdValue, html);
 		}
 
 		setTimeout(() => {
@@ -71,13 +70,14 @@ export const fileStore = {
 	},
 
 	deleteDocument: async () => {
+		console.log('deleting document');
 		const documentsValue = get(documents);
 		const currentIdValue = get(currentId);
 		const editor = get(storeEditor);
 
 		if (documentsValue.length === 1) {
 			editor.commands.clearContent();
-			editor.commands.setContent(JSON.parse(PLACEHOLDER.json));
+			editor.commands.setContent(PLACEHOLDER.html);
 			await fileStore.saveDocument();
 		} else {
 			//find the array index of the current document
@@ -90,48 +90,56 @@ export const fileStore = {
 			// update the document store
 			const newDocuments = documentsValue.filter((d) => d.id !== currentIdValue);
 			const newId = documentsValue[newIndex].id;
-			const content = (await localforage.getItem(newId.toString())) as string;
+			const content = await getItem<string>(newId);
 
 			// update local storage
-			await localforage.setItem('documents', JSON.stringify(newDocuments));
-			await localforage.setItem('currentId', newId);
-			await localforage.removeItem(currentIdValue.toString());
+			await setItem('documents', newDocuments);
+			await setItem('currentId', newId);
+			await removeItem(currentIdValue);
 
 			//update the editor
 			documents.set(newDocuments);
 			currentId.set(newId);
 			editor.commands.clearContent();
-			editor.commands.setContent(JSON.parse(content));
+			editor.commands.setContent(content);
 		}
 	},
 
 	newDocument: async () => {
+		console.log('new document');
 		await fileStore.saveDocument();
 		const editor = get(storeEditor);
 		if (browser && editor) {
-			await localforage.setItem('currentId', get(nextId));
-			await localforage.setItem('nextId', get(nextId) + 1);
-			currentId.set(get(nextId));
-			nextId.set(get(nextId) + 1);
+			// get a new ID
+			const newId = generateRandomHash();
+			await setItem('currentId', newId);
+			currentId.set(newId);
 
-			await localforage.setItem(get(currentId).toString(), PLACEHOLDER.json);
-			const updatedDocuments = [...get(documents), { id: get(currentId), title: PLACEHOLDER.title }];
+			// get new Content
+			await setItem(newId, PLACEHOLDER.html);
+			content.set(PLACEHOLDER.html);
+
+			// get the new Documents
+			const updatedDocuments = [...get(documents), { id: newId, title: PLACEHOLDER.title }];
 			documents.set(updatedDocuments);
+			await setItem('documents', updatedDocuments);
 
+			//update the editor
 			editor.commands.clearContent();
-			editor.commands.setContent(JSON.parse(PLACEHOLDER.json));
+			editor.commands.setContent(PLACEHOLDER.html);
 		}
 	},
 
-	switchDoc: async (id: number) => {
+	switchDoc: async (id: string) => {
+		console.log('switching document');
 		const editor = get(storeEditor);
 		if (browser && editor) {
 			await fileStore.saveDocument();
-			await localforage.setItem('currentId', id);
+			await setItem('currentId', id);
 			currentId.set(id);
-			content.set((await localforage.getItem(get(currentId).toString())) || '');
+			content.set((await getItem(get(currentId))) || '');
 			editor.commands.clearContent();
-			editor.commands.setContent(JSON.parse(get(content)));
+			editor.commands.setContent(get(content));
 		}
 	}
 };
