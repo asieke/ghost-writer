@@ -1,4 +1,5 @@
 import { writeFileSync } from 'fs';
+import { generateRandomHash } from '$lib/utils';
 
 export const POST = async ({ request }: { request: Request }) => {
 	const { data } = await request.json();
@@ -12,13 +13,3 @@ export const POST = async ({ request }: { request: Request }) => {
 
 	return new Response(JSON.stringify({ bones: 'money', filename }));
 };
-
-function generateRandomHash() {
-	return Array(32)
-		.join()
-		.split(',')
-		.map(function () {
-			return (~~(Math.random() * 36)).toString(36);
-		})
-		.join('');
-}

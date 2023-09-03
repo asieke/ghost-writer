@@ -26,22 +26,7 @@
 
 <!-- Sidebar Open = translate left 240px-->
 
-<!-- Open the Sidebar -->
-<button
-	class="absolute left-[195px] top-0 z-50 p-2 pr-3 pt-3 transition-all duration-500 ease-in-out {$sidebarShowing
-		? '-translate-x-0'
-		: '-translate-x-[240px]'}"
-	on:click={() => sidebarShowing.set(false)}
->
-	<ArrowLeftToLine class="h-6 w-6 text-slate-500" />
-</button>
-
-<div
-	bind:this={container}
-	class="absolute left-0 top-0 z-40 h-screen w-[240px] flex-shrink-0 overflow-clip overflow-y-auto bg-slate-100 text-sm text-slate-700 transition-all duration-500 ease-in-out {$sidebarShowing
-		? '-translate-x-0'
-		: '-translate-x-[240px]'}"
->
+<div bind:this={container} class="text-sm text-slate-700">
 	<!-- Sidebar Content -->
 	<div class="flex h-full w-full flex-col px-6 pt-16">
 		{#each $documents as { title, id }}

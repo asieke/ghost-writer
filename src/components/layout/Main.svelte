@@ -1,23 +1,12 @@
 <script lang="ts">
 	import { sidebarShowing } from '$lib/stores/layout';
 	import { Menu } from 'lucide-svelte';
+
+	const url =
+		'https://images.unsplash.com/photo-1542044801-30d3e45ae49a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80';
 </script>
 
-<!-- Button to open sidebar -->
-
-<button
-	class="absolute left-0 top-0 z-30 p-2 pl-3 pt-3 transition-all duration-500 ease-in-out"
-	on:click={() => sidebarShowing.set(true)}
->
-	<Menu class="h-6 w-6 text-slate-500" />
-</button>
-
-<!-- Editor Container, expands if sidebar is not showing-->
-
-<div
-	id="editorContainer"
-	class="absolute left-[240px] top-0 h-screen overflow-y-auto px-16 py-8 transition-all duration-500 ease-in-out"
-	style={$sidebarShowing ? 'width: calc(100vw - 240px)' : 'width: 100vw; transform: translateX(-240px);'}
->
+<div class="h-48 w-full bg-cover bg-center" style="background: url({url})">Header</div>
+<div id="editorContainer" class="px-16 py-8">
 	<slot />
 </div>
