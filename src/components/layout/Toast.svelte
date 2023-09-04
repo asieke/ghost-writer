@@ -14,15 +14,15 @@
 {/each}
 
 {#if $saveToast === 'saved'}
-	<div class=" absolute right-4 top-4 rounded-md bg-slate-100 p-1 text-xs text-slate-500 shadow-sm">
+	<div class=" absolute right-4 top-14 rounded-md bg-slate-100 p-1 text-xs text-slate-500 shadow-sm">
 		{$saveToast}
 	</div>
 {:else if $saveToast === 'saving...'}
-	<div class=" animate-pulse-fast absolute right-4 top-4 rounded-md bg-slate-100 p-1 text-xs text-slate-500 shadow-sm">
+	<div class=" absolute right-4 top-14 animate-pulse-fast rounded-md bg-slate-100 p-1 text-xs text-slate-500 shadow-sm">
 		{$saveToast}
 	</div>
 {:else}
-	<div class=" absolute right-4 top-4 rounded-md bg-slate-100 p-1 text-xs text-slate-500 shadow-sm">
+	<div class=" absolute right-4 top-14 rounded-md bg-slate-100 p-1 text-xs text-slate-500 shadow-sm">
 		{$saveToast}
 	</div>
 {/if}

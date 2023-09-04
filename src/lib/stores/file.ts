@@ -9,12 +9,14 @@ import { generateRandomHash } from '$lib/utils';
 
 const PLACEHOLDER = {
 	html: '<h1>My New Document</h1><p>Lets write something magical</p>',
-	title: 'My New Document'
+	title: 'My New Document',
+	imgUrl: 'https://www.notion.so/images/page-cover/webb1.jpg'
 };
 
 type Document = {
 	id: string;
 	title: string;
+	imgUrl: string;
 };
 
 //the ID of the document that is currently being edited
@@ -28,7 +30,7 @@ export const fileStore = {
 	//Initialize the stores variables by reading from local storage
 	syncLocalStorage: async () => {
 		const newId = generateRandomHash();
-		const newDocuments: Document[] = [{ id: newId, title: PLACEHOLDER.title }];
+		const newDocuments: Document[] = [{ id: newId, title: PLACEHOLDER.title, imgUrl: PLACEHOLDER.imgUrl }];
 		const newContent = PLACEHOLDER.html;
 
 		currentId.set((await getItem('currentId')) || newId);
@@ -39,6 +41,15 @@ export const fileStore = {
 
 		documents.set(((await getItem('documents')) as Document[]) || newDocuments);
 		setItem('documents', get(documents));
+	},
+
+	setImgUrl: async (url: string) => {
+		console.log('setting image url');
+		const currentIdValue = get(currentId);
+		const documentsValue = get(documents);
+		const newDocuments = documentsValue.map((d) => (d.id === currentIdValue ? { ...d, imgUrl: url } : d));
+		documents.set(newDocuments);
+		setItem('documents', newDocuments);
 	},
 
 	//save the current document to local storage
@@ -58,7 +69,9 @@ export const fileStore = {
 
 			//update the document store
 
-			const updatedDocuments = documentsValue.map((d) => (d.id === currentIdValue ? { id: d.id, title } : d));
+			const updatedDocuments = documentsValue.map((d) =>
+				d.id === currentIdValue ? { id: d.id, title, imgUrl: d.imgUrl } : d
+			);
 			documents.set(updatedDocuments);
 			setItem('documents', updatedDocuments);
 			setItem(currentIdValue, html);
@@ -120,7 +133,7 @@ export const fileStore = {
 			content.set(PLACEHOLDER.html);
 
 			// get the new Documents
-			const updatedDocuments = [...get(documents), { id: newId, title: PLACEHOLDER.title }];
+			const updatedDocuments = [...get(documents), { id: newId, title: PLACEHOLDER.title, imgUrl: PLACEHOLDER.imgUrl }];
 			documents.set(updatedDocuments);
 			await setItem('documents', updatedDocuments);
 

@@ -4,7 +4,8 @@ import Slash from './Slash.svelte';
 import tippy from 'tippy.js';
 import type { Instance as TippyInstance } from 'tippy.js';
 import type { Editor, Range } from '@tiptap/core';
-import { Heading1, Heading2, Heading3, Code, Minus, Table, Sparkles, Quote } from 'lucide-svelte';
+import { Heading1, Heading2, Heading3, Code, Minus, Table, Sparkles, Quote, Image } from 'lucide-svelte';
+import { showImageMenu } from '$lib/extensions/image/image';
 
 export interface ItemType {
 	title: string;
@@ -28,6 +29,17 @@ export default {
 				icon: Sparkles,
 				command: ({ editor, range }: { editor: Editor; range: Range }) => {
 					editor.chain().focus().deleteRange(range).insertContent('  ').run();
+				}
+			},
+			{
+				title: 'Image',
+				icon: Image,
+				command: ({ editor, range }: { editor: Editor; range: Range }) => {
+					editor.chain().focus().deleteRange(range).insertContent('').run();
+					const callback = (url: string) => {
+						editor.chain().focus().setImage({ src: url }).run();
+					};
+					showImageMenu(document.body, callback);
 				}
 			},
 			{
