@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { sidebarShowing } from '$lib/stores/layout';
-	import { fileStore, documents, currentId } from '$lib/stores/file';
+	import { fileStore, contents, currentId } from '$lib/stores/file';
 	import { ArrowLeftToLine, Save, Trash2, FilePlus } from 'lucide-svelte';
 	import { editor } from '$lib/stores/editor';
+	import { liveQuery } from 'dexie';
+	import { db } from '$lib/clients/dexie';
 
 	let container: HTMLDivElement;
 
@@ -22,6 +23,12 @@
 			}, 1000);
 		});
 	};
+
+	const deleteDocument = async () => {
+		if (confirm('Are you sure you want to delete this document?')) {
+			await fileStore.deleteDocument();
+		}
+	};
 </script>
 
 <!-- Sidebar Open = translate left 240px-->
@@ -29,16 +36,19 @@
 <div bind:this={container} class="text-sm text-slate-700">
 	<!-- Sidebar Content -->
 	<div class="flex h-full w-full flex-col px-6 pt-16">
-		{#each $documents as { title, id }}
-			<button class="doc" on:click={() => fileStore.switchDoc(id)}>
-				<div class={id === $currentId ? 'selected' : 'unselected'}>
-					{title}
-				</div>
-			</button>
-		{/each}
+		{#if $contents}
+			{#each $contents as { id, title, icon }}
+				<button class="doc" on:click={() => fileStore.switchDoc(id)}>
+					<div class="{id === $currentId ? 'selected' : 'unselected'} flex flex-row items-center align-middle">
+						<div class="mr-1 h-[18px] w-[18px]">{@html icon}</div>
+						{title}
+					</div>
+				</button>
+			{/each}
+		{/if}
 
 		<div class="mt-8 flex flex-row justify-evenly pb-12">
-			<button class="action" on:click={(e) => doAction(e, fileStore.deleteDocument)}><Trash2 class="h-5 w-5" /></button>
+			<button class="action" on:click={deleteDocument}><Trash2 class="h-5 w-5" /></button>
 			<button class="action" on:click={(e) => doAction(e, fileStore.newDocument)}><FilePlus class="h-5 w-5" /></button>
 			<button class="action" on:click={() => alert(JSON.stringify($editor.getJSON()))}>Copy</button>
 		</div>

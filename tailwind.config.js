@@ -3,6 +3,10 @@ export default {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 	theme: {
 		extend: {
+			gridTemplateColumns: {
+				// 24 column grid
+				18: 'repeat(18, minmax(0, 1fr))'
+			},
 			animation: {
 				fadeIn: 'fadeIn 500ms ease-in-out forwards',
 				fadeOut: 'fadeOut 500ms ease-in-out forwards',

@@ -1,12 +1,11 @@
 <script lang="ts">
 	import { showImageMenu } from '$lib/extensions/image/image';
-	import { documents, currentId, fileStore } from '$lib/stores/file';
-	import { onDestroy } from 'svelte';
-	$: url = $documents.find((doc) => doc.id === $currentId)?.imgUrl;
+	import { fileStore, currentDocument } from '$lib/stores/file';
 
-	onDestroy(() => {
-		console.log('destroying component');
-	});
+	$: url = $currentDocument.imgUrl;
+	$: offsetY = $currentDocument.imgOffset;
+	$: icon = $currentDocument.icon;
+	$: lastUpdated = $currentDocument.lastUpdated;
 
 	let image: HTMLImageElement;
 	let container: HTMLDivElement;
@@ -14,11 +13,8 @@
 	let startY = 0;
 
 	let maxScroll = 0;
-	let offsetY = -100;
 
 	let dragging = false;
-
-	console.log(offsetY);
 
 	const handleDrag = (e: MouseEvent) => {
 		if (dragging === false) return;
@@ -54,42 +50,61 @@
 			offsetY = offsetY + e.clientY - startY;
 		}
 
-		console.log('dragging >>> done');
+		fileStore.updateDocument({ imgOffset: offsetY });
 	};
 
 	const bodyClick = (e: MouseEvent) => {
 		if (e.target !== image) {
 			image.style.cursor = 'default';
-			image.removeEventListener('mousemove', handleDrag);
 			image.removeEventListener('mousedown', handleDragStart);
-			image.removeEventListener('mouseup', handleDragEnd);
 			image.removeEventListener('drag', (e) => e.preventDefault());
 			image.removeEventListener('dragstart', (e) => e.preventDefault());
+			document.removeEventListener('mousemove', handleDrag);
+			document.body.removeEventListener('mouseup', handleDragEnd);
 			document.body.removeEventListener('mousedown', bodyClick);
 		}
 	};
 
 	const activateReposition = () => {
 		image.style.cursor = 'move';
-		image.addEventListener('mousemove', handleDrag);
 		image.addEventListener('mousedown', handleDragStart);
-		image.addEventListener('mouseup', handleDragEnd);
 		image.addEventListener('drag', (e) => e.preventDefault());
 		image.addEventListener('dragstart', (e) => e.preventDefault());
+		document.addEventListener('mousemove', handleDrag);
+		document.body.addEventListener('mouseup', handleDragEnd);
 		document.body.addEventListener('mousedown', bodyClick);
+	};
+
+	const handleBackgroundImage = (url: string) => {
+		fileStore.updateDocument({ imgUrl: url });
+	};
+
+	const handleIconImage = (url: string) => {
+		if (url.length <= 2) {
+			fileStore.updateDocument({ icon: '<span>' + url + '</span>' });
+		} else {
+			fileStore.updateDocument({ icon: `<img src=${url} />` });
+		}
 	};
 </script>
 
-<div class="banner h-[300px] overflow-clip" style="width: 100% height: 500px; relative" bind:this={container}>
-	<button class="absolute" on:click={(e) => showImageMenu(null, fileStore.setImgUrl)}>Change Image</button>
+<button class="iconWrapper absolute left-14 top-[252px] z-50" on:click={(e) => showImageMenu(null, handleIconImage)}>
+	{@html icon}
+</button>
+
+<div class="banner relative overflow-clip bg-red-500" style="width: 100%; height: 300px;" bind:this={container}>
+	<button class="absolute" on:click={(e) => showImageMenu(null, handleBackgroundImage)}>Change Image</button>
 	<button class="absolute top-8" on:click|stopPropagation={activateReposition}>Reposition</button>
-	{#if url}<img
+	{#if url}
+		<img
 			bind:this={image}
 			src={url}
 			alt=""
-			style="object-fit: cover; object-position: 0px {offsetY}px"
+			style="width: 100%; object-fit: cover; object-position: 0px {offsetY}px"
 			draggable="true"
-		/>{/if}
+		/>
+	{/if}
+	<div class="absolute bottom-0 right-0 bg-red-500">{lastUpdated}</div>
 </div>
 
 <style lang="postcss">

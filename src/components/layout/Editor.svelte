@@ -7,9 +7,8 @@
 	import { PluginKey } from '@tiptap/pm/state';
 
 	import { editor } from '$lib/stores/editor';
-	import { content, fileStore } from '$lib/stores/file';
+	import { fileStore, currentDocument, currentId } from '$lib/stores/file';
 	import { saveToast } from '$lib/stores/toast';
-	import { handlePaste } from '$lib/handlers';
 
 	import { updateDecorations } from '$lib/extensions/hoverButtons/hoverButtons';
 	import { BubbleMenu } from '$components/menus';
@@ -22,11 +21,12 @@
 	let saveTimeout: ReturnType<typeof setTimeout> | null = null; // inactivity timer
 
 	onMount(async () => {
-		await fileStore.syncLocalStorage();
+		console.log('Current ID: ', $currentId);
+		console.log('Current Document: ', $currentDocument);
 
 		let newEditor = new Editor({
 			element: editorContainer,
-			content: $content,
+			content: $currentDocument.html,
 			extensions: [
 				//all extensions
 				...extensions,
@@ -54,9 +54,6 @@
 					}
 				})
 			],
-			editorProps: {
-				handlePaste: handlePaste
-			},
 			onTransaction: () => {
 				editor.set($editor);
 			},

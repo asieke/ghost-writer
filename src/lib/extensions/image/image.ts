@@ -15,10 +15,7 @@ export const showImageMenu = (target: HTMLElement | null, callback: (url: string
 		interactive: true,
 		trigger: 'manual',
 		placement: 'bottom-start',
-		offset: [isBody ? window.innerWidth / 2 - 250 : 0, isBody ? 100 : 0],
-		onClickOutside: (instance) => {
-			instance.destroy();
-		}
+		offset: [isBody ? window.innerWidth / 2 - 250 : 0, isBody ? 100 : 0]
 	});
 
 	const component = new ImageMenu({

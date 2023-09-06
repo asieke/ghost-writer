@@ -8,7 +8,8 @@ const config = {
 			$lib: './src/lib',
 			$styles: './src/styles',
 			$components: './src/components',
-			$extensions: './src/extensions'
+			$extensions: './src/extensions',
+			$types: './src/types'
 		}
 	},
 	preprocess: vitePreprocess()

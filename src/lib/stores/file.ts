@@ -1,58 +1,47 @@
 /* Store for saving files to local storage */
 
 import { writable, get } from 'svelte/store';
-import { getItem, setItem, removeItem } from '$lib/clients/localForage';
 import { browser } from '$app/environment';
 import { editor as storeEditor } from './editor';
 import { saveToast } from '$lib/stores/toast';
-import { generateRandomHash } from '$lib/utils';
-
-const PLACEHOLDER = {
-	html: '<h1>My New Document</h1><p>Lets write something magical</p>',
-	title: 'My New Document',
-	imgUrl: 'https://www.notion.so/images/page-cover/webb1.jpg'
-};
-
-type Document = {
-	id: string;
-	title: string;
-	imgUrl: string;
-};
-
-//the ID of the document that is currently being edited
-export const currentId = writable('');
-//the contents of the document that is currently being edited
-export const content = writable('');
-//metadata about all of the documents
-export const documents = writable<Document[]>([]);
+import { db, placeholderDocument } from '$lib/clients/dexie';
+import type { Document } from '$types/database';
 
 export const fileStore = {
-	//Initialize the stores variables by reading from local storage
-	syncLocalStorage: async () => {
-		const newId = generateRandomHash();
-		const newDocuments: Document[] = [{ id: newId, title: PLACEHOLDER.title, imgUrl: PLACEHOLDER.imgUrl }];
-		const newContent = PLACEHOLDER.html;
-
-		currentId.set((await getItem('currentId')) || newId);
-		setItem('currentId', get(currentId));
-
-		content.set((await getItem(get(currentId))) || newContent);
-		setItem(get(currentId), get(content));
-
-		documents.set(((await getItem('documents')) as Document[]) || newDocuments);
-		setItem('documents', get(documents));
+	/**
+	 * Fetches the current document ID from the database.
+	 * @returns {Promise<number>} The current document ID.
+	 */
+	getCurrentId: async () => {
+		return (await db.get('currentId')) as number;
 	},
 
-	setImgUrl: async (url: string) => {
-		console.log('setting image url');
-		const currentIdValue = get(currentId);
-		const documentsValue = get(documents);
-		const newDocuments = documentsValue.map((d) => (d.id === currentIdValue ? { ...d, imgUrl: url } : d));
-		documents.set(newDocuments);
-		setItem('documents', newDocuments);
+	/**
+	 * Retrieves the current document based on the ID from the database.
+	 * @returns {Promise<Document>} The current document.
+	 */
+	getCurrentDocument: async () => {
+		const id = (await db.get('currentId')) as number;
+		const doc = (await db.documents.get(id)) || placeholderDocument;
+		return doc;
 	},
 
-	//save the current document to local storage
+	/**
+	 * Fetches the contents for the document picker.
+	 * @returns {Promise<Array>} An array containing document IDs, titles, and icons.
+	 */
+	getContents: async () => {
+		const contents: { id: number; title: string; icon: string }[] = [];
+		await db.documents.orderBy('id').each((doc) => {
+			if (!doc.id || !doc.icon || !doc.title) return;
+			contents.push({ id: doc.id, icon: doc.icon, title: doc.title });
+		});
+		return contents;
+	},
+
+	/**
+	 * Saves the current state of the document.
+	 */
 	saveDocument: async () => {
 		console.log('saving document');
 		saveToast.set('saving...');
@@ -60,99 +49,110 @@ export const fileStore = {
 
 		if (browser && editor) {
 			const html = editor.getHTML();
-			//extract the title from the html
+			const id = get(currentId);
 			const match = html.match(/<[^>]+>([^<]+)<\/[^>]+>/);
 			const title = match ? match[1] : '';
 
-			const currentIdValue = get(currentId);
-			const documentsValue = get(documents);
+			//update the database
+			await db.documents.update(id, { html, title });
 
-			//update the document store
-
-			const updatedDocuments = documentsValue.map((d) =>
-				d.id === currentIdValue ? { id: d.id, title, imgUrl: d.imgUrl } : d
-			);
-			documents.set(updatedDocuments);
-			setItem('documents', updatedDocuments);
-			setItem(currentIdValue, html);
+			//update the contents store
+			currentDocument.set(await fileStore.getCurrentDocument());
+			contents.set(await fileStore.getContents());
 		}
 
 		setTimeout(() => {
 			saveToast.set('saved');
-		}, 1000);
+		}, 300);
 	},
 
+	/**
+	 * Updates the current document with new partial data.
+	 * @param {Partial<Document>} newDocument The new document data to merge.
+	 */
+	updateDocument: async (newDocument: Partial<Document>) => {
+		console.log(newDocument);
+
+		currentDocument.update((d) => ({ ...d, ...newDocument }));
+		await db.documents.update(get(currentId), get(currentDocument));
+
+		contents.set(await fileStore.getContents());
+	},
+
+	/**
+	 * Deletes the current document.
+	 */
 	deleteDocument: async () => {
-		console.log('deleting document');
-		const documentsValue = get(documents);
-		const currentIdValue = get(currentId);
 		const editor = get(storeEditor);
 
-		if (documentsValue.length === 1) {
+		console.log('deleting document');
+		if ((await db.documents.count()) > 1) {
+			const id = get(currentId);
+			await db.documents.delete(id);
+			const doc = await db.documents.orderBy('id').first();
+			if (!doc || !doc.id) return;
+			currentDocument.set(doc);
+			currentId.set(doc.id);
+			await db.set('currentId', doc.id);
+
 			editor.commands.clearContent();
-			editor.commands.setContent(PLACEHOLDER.html);
-			await fileStore.saveDocument();
+			editor.commands.setContent(get(currentDocument).html);
 		} else {
-			//find the array index of the current document
-			const arrayIndex = documentsValue.findIndex((d) => d.id === currentIdValue);
-			// find the index of the document to switch to
-			let newIndex = arrayIndex;
-			if (documentsValue[arrayIndex - 1]) newIndex--;
-			else if (documentsValue[arrayIndex + 1]) newIndex++;
-
-			// update the document store
-			const newDocuments = documentsValue.filter((d) => d.id !== currentIdValue);
-			const newId = documentsValue[newIndex].id;
-			const content = await getItem<string>(newId);
-
-			// update local storage
-			await setItem('documents', newDocuments);
-			await setItem('currentId', newId);
-			await removeItem(currentIdValue);
-
-			//update the editor
-			documents.set(newDocuments);
-			currentId.set(newId);
+			const id = get(currentId);
+			await db.documents.update(id, placeholderDocument);
+			currentDocument.update((d) => ({ ...d, ...placeholderDocument }));
 			editor.commands.clearContent();
-			editor.commands.setContent(content);
+			editor.commands.setContent(get(currentDocument).html);
 		}
+
+		contents.set(await fileStore.getContents());
 	},
 
+	/**
+	 * Creates a new document.
+	 */
 	newDocument: async () => {
 		console.log('new document');
 		await fileStore.saveDocument();
 		const editor = get(storeEditor);
+
 		if (browser && editor) {
-			// get a new ID
-			const newId = generateRandomHash();
-			await setItem('currentId', newId);
+			const newId = await db.documents.add({ ...placeholderDocument });
+			const doc = await db.documents.get(newId);
+			if (!doc || !doc.id) return;
+
+			await db.set('currentId', newId);
+
+			//set store
+			currentDocument.set(doc);
 			currentId.set(newId);
-
-			// get new Content
-			await setItem(newId, PLACEHOLDER.html);
-			content.set(PLACEHOLDER.html);
-
-			// get the new Documents
-			const updatedDocuments = [...get(documents), { id: newId, title: PLACEHOLDER.title, imgUrl: PLACEHOLDER.imgUrl }];
-			documents.set(updatedDocuments);
-			await setItem('documents', updatedDocuments);
-
-			//update the editor
-			editor.commands.clearContent();
-			editor.commands.setContent(PLACEHOLDER.html);
 		}
+		contents.set(await fileStore.getContents());
 	},
 
-	switchDoc: async (id: string) => {
+	/**
+	 * Switches to a different document by ID.
+	 * @param {number} id The ID of the document to switch to.
+	 */
+	switchDoc: async (id: number) => {
 		console.log('switching document');
+		await fileStore.saveDocument();
 		const editor = get(storeEditor);
+
 		if (browser && editor) {
-			await fileStore.saveDocument();
-			await setItem('currentId', id);
-			currentId.set(id);
-			content.set((await getItem(get(currentId))) || '');
+			const newDocument = await db.documents.get(id);
+			if (!newDocument || !newDocument.id) return;
+
+			currentDocument.set(newDocument);
+			currentId.set(newDocument.id);
+
+			await db.set('currentId', newDocument.id);
 			editor.commands.clearContent();
-			editor.commands.setContent(get(content));
+			editor.commands.setContent(get(currentDocument).html);
 		}
 	}
 };
+
+export const currentId = writable<number>(await fileStore.getCurrentId());
+export const currentDocument = writable<Document>(await fileStore.getCurrentDocument());
+export const contents = writable<{ id: number; title: string; icon: string }[]>(await fileStore.getContents());

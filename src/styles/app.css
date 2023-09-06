@@ -196,6 +196,26 @@ ul[data-type='taskList'] ul[data-type='taskList'] > li {
 	position: relative;
 }
 
+.iconWrapper {
+	@apply h-[96px] w-[96px] rounded-lg  hover:bg-black/25;
+}
+
+.iconWrapper > span {
+	font-size: 80px;
+	line-height: 96px;
+}
+
+.iconWrapper > img {
+	width: 64px;
+	height: 64px;
+	object-fit: cover;
+	@apply mx-auto my-auto rounded-lg shadow-2xl ring-8 ring-white;
+}
+
+/*
+Highlight JS Syntax Highlighting
+*/
+
 .hljs-comment,
 .hljs-quote {
 	color: #616161;
