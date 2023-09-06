@@ -15,7 +15,6 @@
 	let submit: HTMLButtonElement;
 	let aiTextArea: HTMLTextAreaElement;
 	let topCSS = '-top-[42px]';
-	let widthCSS = 'w-[500px]';
 
 	//state
 	let inputText: string = '';
@@ -30,7 +29,7 @@
 			//get the x position of the cursor in the editor
 			const { left } = editor.view.coordsAtPos(range.from);
 
-			menu.style.width = `${width - left + 60}px`;
+			console.log(left);
 
 			if (input) input.focus();
 			if (editor.isActive('heading')) {
@@ -90,7 +89,11 @@
 
 <svelte:window on:keydown={handleKeydown} />
 
-<div class="absolute {topCSS} z-50 w-[500px] overflow-scroll rounded-lg border bg-white p-2 shadow-xl" bind:this={menu}>
+<div
+	class="absolute {topCSS} z-50 overflow-scroll rounded-lg border bg-white p-2 shadow-xl"
+	style="width: 600px"
+	bind:this={menu}
+>
 	<div class="flex flex-row items-center align-middle">
 		{#if loading}
 			<div class="spinning flex h-6 w-6 items-center justify-center align-middle">

@@ -23,12 +23,6 @@
 			}, 1000);
 		});
 	};
-
-	const deleteDocument = async () => {
-		if (confirm('Are you sure you want to delete this document?')) {
-			await fileStore.deleteDocument();
-		}
-	};
 </script>
 
 <!-- Sidebar Open = translate left 240px-->
@@ -46,20 +40,10 @@
 				</button>
 			{/each}
 		{/if}
-
-		<div class="mt-8 flex flex-row justify-evenly pb-12">
-			<button class="action" on:click={deleteDocument}><Trash2 class="h-5 w-5" /></button>
-			<button class="action" on:click={(e) => doAction(e, fileStore.newDocument)}><FilePlus class="h-5 w-5" /></button>
-			<button class="action" on:click={() => alert(JSON.stringify($editor.getJSON()))}>Copy</button>
-		</div>
 	</div>
 </div>
 
 <style lang="postcss">
-	button.action {
-		@apply rounded-md bg-slate-200 p-2 hover:bg-slate-300;
-	}
-
 	button.doc {
 		@apply py-2 text-left;
 	}

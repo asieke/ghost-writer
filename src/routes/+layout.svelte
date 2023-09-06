@@ -6,7 +6,7 @@
 </script>
 
 <div class="fixed left-0 top-0 z-50">
-	<button class="p-2 text-slate-600" on:click={() => sidebarShowing.set(!$sidebarShowing)}><Menu /></button>
+	<button class="px-2 py-3 text-slate-600" on:click={() => sidebarShowing.set(!$sidebarShowing)}><Menu /></button>
 </div>
 <div class="fixed left-0 right-0 top-0 h-[48px]">
 	<Nav />

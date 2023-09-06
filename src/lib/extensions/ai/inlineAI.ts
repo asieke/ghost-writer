@@ -38,6 +38,14 @@ export default Extension.create({
 
 			return {
 				onStart: (props: PropsType) => {
+					// get the dom element from the editor
+					const triggerElement = props.editor.view.domAtPos(props.range.from).node as HTMLElement;
+
+					console.log(triggerElement.getBoundingClientRect(), window.innerWidth);
+					const left = triggerElement.getBoundingClientRect().left;
+					const width = window.innerWidth;
+					const adjustment = left > width / 2 ? 600 - (width - left) : 0;
+
 					const element = document.createElement('div');
 					component = new InlineAI({
 						target: element,
@@ -54,7 +62,9 @@ export default Extension.create({
 						showOnCreate: true,
 						interactive: true,
 						trigger: 'manual',
-						placement: 'bottom-start'
+						placement: 'bottom-start',
+						maxWidth: 600,
+						offset: [-10 - adjustment, 10]
 					})[0];
 				},
 
