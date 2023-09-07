@@ -2,8 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+document,
+body {
+	--font: 'Courier New', Courier, monospace;
+}
+
 :root {
 	--success: #10b981; /* The value for green-500 in Tailwind */
+}
+
+.Times .tiptap {
+	font-family: 'Times New Roman', Times, serif;
+}
+
+.tiptap {
+	@apply border-0 outline-0 outline-offset-0 ring-0 transition-all duration-200 ease-in-out;
 }
 
 .tiptap > * {
@@ -100,10 +113,6 @@ code {
 
 pre code {
 	@apply bg-slate-800 text-slate-200;
-}
-
-.tiptap {
-	@apply border-0 outline-0 outline-offset-0 ring-0 transition-all duration-200 ease-in-out;
 }
 
 table {

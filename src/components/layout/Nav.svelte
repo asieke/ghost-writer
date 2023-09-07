@@ -29,13 +29,17 @@
 			console.error('Error:', err);
 		}
 	};
+
+	const changeFont = () => {
+		document.documentElement.classList.toggle('Times');
+	};
 </script>
 
 <div
 	class="flex h-full w-full flex-row items-center justify-between bg-slate-50 align-middle transition-all duration-500 ease-in-out"
 	style={$sidebarShowing ? 'padding-left: 254px' : 'padding-left: 50px'}
 >
-	<div>Hello</div>
+	<div><button on:click={changeFont} class="rounded bg-indigo-300 p-1 px-2 text-white shadow-sm">Font</button></div>
 	<div class="flex flex-row space-x-2 pr-4 text-slate-500">
 		<button class="action" on:click={deleteDocument}><Trash2 /></button>
 		<button class="action" on:click={fileStore.newDocument}><FilePlus /></button>
